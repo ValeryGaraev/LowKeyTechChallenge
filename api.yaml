@@ -1,0 +1,719 @@
+openapi: 3.0.0
+info:
+  title: Pexels API
+  version: 1.0.0
+servers:
+  - url: https://api.pexels.com/v1
+security:
+  - ApiKey: []
+tags:
+  - name: photos
+    description: Operations on photos
+paths:
+  /curated:
+    get:
+      summary: Get curated photos
+      description: Retrieve a list of curated photos from Pexels API
+      tags:
+        - photos
+      operationId: getCuratedPhotos
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: per_page
+          in: query
+          description: Number of photos per page
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 80
+            default: 15
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CuratedPhotosResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorInfo'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorInfo'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorInfo'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorInfo'
+components:
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    ErrorInfo:
+      description: Error description
+      type: object
+      properties:
+        code:
+          description: Machine readable error code
+          type: string
+        message:
+          description: Human readable error message
+          type: string
+      additionalProperties: false
+      required:
+          - code
+          - message
+    CuratedPhotosResponse:
+      description: Curated photos response
+      type: object
+      properties:
+        page:
+          type: integer
+        per_page:
+          type: integer
+        total_results:
+          type: integer
+        next_page:
+          type: string
+        photos:
+          type: array
+          items:
+            $ref: '#/components/schemas/Photo'
+    Photo:
+      description: Photo object
+      type: object
+      properties:
+        photographer:
+          type: string
+        src:
+          type: object
+          $ref: '#/components/schemas/PhotoSource'
+    PhotoSource:
+      description: Photo source URL
+      type: object
+      properties:
+        original:
+          type: string
+        large2x:
+          type: string
+        large:
+          type: string
+        medium:
+          type: string
+        small:
+          type: string
+        portrait:
+          type: string
+        landscape:
+          type: string
+        tiny:
+          type: string
+
+
+#openapi: 3.0.0
+#info:
+#  version: 1.0.0
+#  title: Low Key Tech Challenge
+#  description: Low Key Tech Challenge API
+#servers:
+#  - url: 'https://api.pexels.com/v1'
+#security:
+#  - apiKey: []
+#securityDefinitions:
+#  apiKey:
+#    type: apiKey
+#    in: header
+#    name: Authorization
+#    value: "d27882JvtAhoKoV3JIqpt2SqiJJlE7Q0ZmOk1ERSlcWM3cGylTb4Jcok"
+#tags:
+#  - name: photos
+#    description: Operations on photos
+#paths:
+#  /curated:
+#    get:
+#      summary: Receive real-time photos curated by the Pexels team.
+#      security:
+#        - apiKey: []
+#      tags:
+#        - photos
+#      responses:
+#        '200':
+#          description: OK
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/V1ExercisesIdGetResponse'
+#        '400':
+#          description: Bad Request
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#        '401':
+#          description: Unauthorized
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#        '404':
+#          description: Not Found
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#        '500':
+#          description: Internal Server Error
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#  /v1/exercises:
+#    get:
+#      tags:
+#        - exercises
+#      summary: Get exercise samples
+#
+#      responses:
+#        '200':
+#          description: OK
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/V1ExercisesGetResponse'
+#        '401':
+#          description: Unauthorized
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#        '500':
+#          description: Internal Server Error
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#    post:
+#      tags:
+#        - exercises
+#      summary: Save an exercise sample
+#      security:
+#        - Bearer: []
+#      requestBody:
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/V1ExercisesPostRequest'
+#      responses:
+#        '200':
+#          description: OK
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/V1ExercisesPostResponse'
+#        '400':
+#          description: Bad Request
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#        '401':
+#          description: Unauthorized
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#        '500':
+#          description: Internal Server Error
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#  '/v1/exercises/{id}':
+#    get:
+#      tags:
+#        - exercises
+#      summary: Get an exercise sample
+#      security:
+#        - Bearer: []
+#      parameters:
+#        - name: id
+#          in: path
+#          description: ID of an exercise sample to get info about
+#          required: true
+#          schema:
+#            $ref: '#/components/schemas/Identifier'
+#
+#  /v1/workouts:
+#    get:
+#      tags:
+#        - workouts
+#      summary: Get workouts
+#      security:
+#        - Bearer: []
+#      responses:
+#        '200':
+#          description: OK
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/V1WorkoutsGetResponse'
+#        '401':
+#          description: Unauthorized
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#        '500':
+#          description: Internal Server Error
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#    post:
+#      tags:
+#        - workouts
+#      summary: Save a workout
+#      security:
+#        - Bearer: []
+#      requestBody:
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/V1WorkoutsPostRequest'
+#      responses:
+#        '200':
+#          description: OK
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/V1WorkoutsPostResponse'
+#        '400':
+#          description: Bad Request
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#        '401':
+#          description: Unauthorized
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#        '500':
+#          description: Internal Server Error
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#  '/v1/workouts/{id}':
+#    get:
+#      tags:
+#        - workouts
+#      summary: Get a workout
+#      security:
+#        - Bearer: []
+#      parameters:
+#        - name: id
+#          in: path
+#          description: ID of a workout to get info about
+#          required: true
+#          schema:
+#            $ref: '#/components/schemas/Identifier'
+#      responses:
+#        '200':
+#          description: OK
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/V1WorkoutsIdGetResponse'
+#        '400':
+#          description: Bad Request
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#        '401':
+#          description: Unauthorized
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#        '404':
+#          description: Not Found
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#        '500':
+#          description: Internal Server Error
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorInfo'
+#components:
+#  securitySchemes:
+#    apiKey:
+#      type: apiKey
+#      in: header
+#      name: Authorization
+#  schemas:
+#    Identifier:
+#      description: Object ID
+#      type: string
+#      pattern: '^[a-zA-Z0-9]{16}$'
+#    Timestamp:
+#      description: Time point
+#      type: string
+#      format: date-time
+#    SetsCount:
+#      description: Sets count
+#      type: integer
+#      minimum: 1
+#    ExecutionsCount:
+#      description: Executions count
+#      type: integer
+#      minimum: 1
+#    ExerciseType:
+#      description: Exercise type
+#      type: string
+#      enum:
+#        - cardio
+#        - weight
+#        - bodyweight
+#    ExerciseName:
+#      description: Exercise name
+#      type: string
+#      minLength: 2
+#      maxLength: 64
+#    ExerciseSample:
+#      description: Exercise sample info
+#      type: object
+#      properties:
+#        id:
+#          $ref: '#/components/schemas/Identifier'
+#        type:
+#          $ref: '#/components/schemas/ExerciseType'
+#        name:
+#          $ref: '#/components/schemas/ExerciseName'
+#      additionalProperties: false
+#      required:
+#        - id
+#        - type
+#        - name
+#    ExerciseSampleLess:
+#      description: Exercise sample info
+#      type: object
+#      properties:
+#        id:
+#          $ref: '#/components/schemas/Identifier'
+#        type:
+#          $ref: '#/components/schemas/ExerciseType'
+#        name:
+#          $ref: '#/components/schemas/ExerciseName'
+#      additionalProperties: false
+#      required:
+#        - id
+#        - type
+#        - name
+#    ExerciseSamplesLess:
+#      description: List of exericse samples
+#      type: array
+#      items:
+#        $ref: '#/components/schemas/ExerciseSampleLess'
+#    ExerciseSampleNew:
+#      type: object
+#      properties:
+#        type:
+#          $ref: '#/components/schemas/ExerciseType'
+#        name:
+#          $ref: '#/components/schemas/ExerciseName'
+#      additionalProperties: false
+#      required:
+#        - type
+#        - name
+#    ExerciseCommonBase:
+#      description: Common exercise base to be inherited
+#      type: object
+#      properties:
+#        id:
+#          $ref: '#/components/schemas/Identifier'
+#        type:
+#          $ref: '#/components/schemas/ExerciseType'
+#        name:
+#          $ref: '#/components/schemas/ExerciseName'
+#      additionalProperties: false
+#      required:
+#        - id
+#        - type
+#        - name
+#    ExerciseCardioBase:
+#      description: Cardio exercise base to be inherited
+#      type: object
+#      properties:
+#        duration:
+#          description: Seconds
+#          type: integer
+#          minimum: 0
+#        distance:
+#          description: Meters
+#          type: integer
+#          minimum: 0
+#        speed:
+#          description: m/s
+#          type: number
+#          minimum: 0
+#        incline:
+#          description: Degrees
+#          type: number
+#          minimum: 0
+#          maximum: 30
+#      additionalProperties: false
+#    ExerciseWeightBase:
+#      description: Weight exercise base to be inherited
+#      type: object
+#      properties:
+#        weight:
+#          description: Grams
+#          type: integer
+#          minimum: 0
+#        sets_count:
+#          $ref: '#/components/schemas/SetsCount'
+#        executions_count:
+#          $ref: '#/components/schemas/ExecutionsCount'
+#      additionalProperties: false
+#      required:
+#        - weight
+#        - sets_count
+#        - executions_count
+#    ExerciseBodyweightBase:
+#      description: Bodyweight exercise base to be inherited
+#      type: object
+#      properties:
+#        extra_weight:
+#          description: Grams
+#          type: integer
+#          minimum: 0
+#        sets_count:
+#          $ref: '#/components/schemas/SetsCount'
+#        executions_count:
+#          $ref: '#/components/schemas/ExecutionsCount'
+#      additionalProperties: false
+#      required:
+#        - sets_count
+#        - executions_count
+#    ExerciseCardio:
+#      description: 'Cardio exercise (running, etc.)'
+#      allOf:
+#        - $ref: '#/components/schemas/ExerciseCommonBase'
+#        - $ref: '#/components/schemas/ExerciseCardioBase'
+#    ExerciseWeight:
+#      description: 'Weight exercises (bench press, etc.)'
+#      allOf:
+#        - $ref: '#/components/schemas/ExerciseCommonBase'
+#        - $ref: '#/components/schemas/ExerciseWeightBase'
+#    ExerciseBodyweight:
+#      description: 'Bodyweight exercise (pull-ups, etc.)'
+#      allOf:
+#        - $ref: '#/components/schemas/ExerciseCommonBase'
+#        - $ref: '#/components/schemas/ExerciseBodyweightBase'
+#    Exercise:
+#      description: Exercise info
+#      oneOf:
+#        - $ref: '#/components/schemas/ExerciseCardio'
+#        - $ref: '#/components/schemas/ExerciseWeight'
+#        - $ref: '#/components/schemas/ExerciseBodyweight'
+#      discriminator:
+#        propertyName: type
+#        mapping:
+#          cardio: '#/components/schemas/ExerciseCardio'
+#          weight: '#/components/schemas/ExerciseWeight'
+#          bodyweight: '#/components/schemas/ExerciseBodyweight'
+#    Exercises:
+#      description: List of exericses
+#      type: array
+#      items:
+#        $ref: '#/components/schemas/Exercise'
+#      minItems: 1
+#    WorkoutSet:
+#      description: Set of a workout
+#      type: object
+#      properties:
+#        executions_count:
+#          $ref: '#/components/schemas/ExecutionsCount'
+#        exercises:
+#          $ref: '#/components/schemas/Exercises'
+#      additionalProperties: false
+#      required:
+#        - executions_count
+#        - exercises
+#    WorkoutSets:
+#      description: Sets of a workout
+#      type: array
+#      items:
+#        $ref: '#/components/schemas/WorkoutSet'
+#      minItems: 1
+#    Workout:
+#      description: Workout info
+#      type: object
+#      properties:
+#        id:
+#          $ref: '#/components/schemas/Identifier'
+#        timestamp:
+#          $ref: '#/components/schemas/Timestamp'
+#        workout_sets:
+#          $ref: '#/components/schemas/WorkoutSets'
+#      additionalProperties: false
+#      required:
+#        - id
+#        - timestamp
+#        - workout_sets
+#    WorkoutLess:
+#      description: Workout info
+#      type: object
+#      properties:
+#        id:
+#          $ref: '#/components/schemas/Identifier'
+#        timestamp:
+#          $ref: '#/components/schemas/Timestamp'
+#      additionalProperties: false
+#      required:
+#        - id
+#        - timestamp
+#    WorkoutsLess:
+#      description: List of workouts
+#      type: array
+#      items:
+#        $ref: '#/components/schemas/WorkoutLess'
+#    WorkoutNew:
+#      description: Workout to be saved
+#      type: object
+#      properties:
+#        timestamp:
+#          $ref: '#/components/schemas/Timestamp'
+#        workout_sets:
+#          $ref: '#/components/schemas/WorkoutSets'
+#      additionalProperties: false
+#      required:
+#        - timestamp
+#        - workout_sets
+#    ErrorInfo:
+#      description: Error description
+#      type: object
+#      properties:
+#        code:
+#          description: Machine readable error code
+#          type: string
+#        message:
+#          description: Human readable error message
+#          type: string
+#      additionalProperties: false
+#      required:
+#        - code
+#        - message
+#    V1AuthTokenIssuePostResponse:
+#      description: Issued token
+#      type: object
+#      properties:
+#        token:
+#          type: string
+#      additionalProperties: false
+#      required:
+#        - token
+#    V1ExercisesGetResponse:
+#      description: List of exercise samples (less)
+#      type: object
+#      properties:
+#        exercises:
+#          $ref: '#/components/schemas/ExerciseSamplesLess'
+#      additionalProperties: false
+#      required:
+#        - exercises
+#    V1ExercisesPostRequest:
+#      description: Exercise sample to be saved
+#      type: object
+#      properties:
+#        exercise:
+#          $ref: '#/components/schemas/ExerciseSampleNew'
+#      additionalProperties: false
+#      required:
+#        - exercise
+#    V1ExercisesPostResponse:
+#      description: Saved exercise sample ID
+#      type: object
+#      properties:
+#        id:
+#          $ref: '#/components/schemas/Identifier'
+#      additionalProperties: false
+#      required:
+#        - id
+#    V1ExercisesIdGetResponse:
+#      description: Exercise sample info
+#      type: object
+#      properties:
+#        exercise:
+#          $ref: '#/components/schemas/ExerciseSample'
+#      additionalProperties: false
+#      required:
+#        - exercise
+#    V1WorkoutsGetResponse:
+#      description: List of workouts (less)
+#      type: object
+#      properties:
+#        workouts:
+#          $ref: '#/components/schemas/WorkoutsLess'
+#      additionalProperties: false
+#      required:
+#        - workouts
+#    V1WorkoutsPostRequest:
+#      description: Workout to be saved
+#      type: object
+#      properties:
+#        workout:
+#          $ref: '#/components/schemas/WorkoutNew'
+#      additionalProperties: false
+#      required:
+#        - workout
+#    V1WorkoutsPostResponse:
+#      description: Saved workout ID
+#      type: object
+#      properties:
+#        id:
+#          $ref: '#/components/schemas/Identifier'
+#      additionalProperties: false
+#      required:
+#        - id
+#    V1WorkoutsIdGetResponse:
+#      description: Workout info
+#      type: object
+#      properties:
+#        workout:
+#          $ref: '#/components/schemas/Workout'
+#      additionalProperties: false
+#      required:
+#        - workout
